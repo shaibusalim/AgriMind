@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Bug, Loader, AlertTriangle, Upload, CheckCircle, XCircle } from "lucide-react";
+import { Bug, Loader, AlertTriangle, Upload, CheckCircle, XCircle, Lightbulb } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Progress } from "../ui/progress";
 
@@ -72,12 +72,12 @@ export function PestDetectionClient() {
         </CardHeader>
         <CardContent className="space-y-4">
             {!preview ? (
-              <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg text-center">
+              <Label htmlFor="picture" className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg text-center cursor-pointer hover:border-primary/50 transition-colors">
                   <Upload className="w-12 h-12 text-muted-foreground" />
-                  <Label htmlFor="picture" className="mt-4 font-semibold text-lg">Upload Crop Image</Label>
+                  <span className="mt-4 font-semibold text-lg">Upload Crop Image</span>
                   <p className="text-muted-foreground text-sm mt-1">Drag and drop or click to upload</p>
                   <Input id="picture" type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} className="sr-only" />
-              </div>
+              </Label>
             ) : (
                 <div className="space-y-4">
                     <div className="relative w-full max-w-lg mx-auto">
@@ -127,24 +127,28 @@ export function PestDetectionClient() {
             <Alert variant={result.hasPestsOrDiseases ? "destructive" : "default"} className={!result.hasPestsOrDiseases ? "border-green-500 bg-green-500/10" : ""}>
                 {result.hasPestsOrDiseases ? <Bug /> : <CheckCircle className="text-green-600"/>}
                 <AlertTitle className={!result.hasPestsOrDiseases ? "text-green-700" : ""}>
-                    {result.hasPestsOrDiseases ? "Pests or Diseases Detected" : "Looks Healthy"}
+                    {result.hasPestsOrDiseases ? "Potential Issue Detected" : "Looks Healthy"}
                 </AlertTitle>
                 <AlertDescription className={!result.hasPestsOrDiseases ? "text-green-600" : ""}>
-                    {result.hasPestsOrDiseases ? `The AI has identified potential issues.` : `No significant pests or diseases were detected.`}
+                   The AI has identified the following: <strong>{result.identification}</strong>.
                 </AlertDescription>
             </Alert>
             
-            {result.hasPestsOrDiseases && (
-                <div className="space-y-2">
-                    <h4 className="font-semibold">Identification</h4>
-                    <p className="text-muted-foreground">{result.identification}</p>
-                    <h4 className="font-semibold">Confidence Level</h4>
-                    <div className="flex items-center gap-2">
-                        <Progress value={result.confidence * 100} className="w-full" />
-                        <span className="font-mono text-sm">{(result.confidence * 100).toFixed(0)}%</span>
-                    </div>
+            <div className="space-y-2">
+                <h4 className="font-semibold">Confidence Level</h4>
+                <div className="flex items-center gap-2">
+                    <Progress value={result.confidence * 100} className="w-full" />
+                    <span className="font-mono text-sm">{(result.confidence * 100).toFixed(0)}%</span>
                 </div>
-            )}
+            </div>
+
+            <div className="space-y-2 pt-2">
+                <h4 className="font-semibold flex items-center gap-2">
+                    <Lightbulb className="text-primary"/>
+                    {result.hasPestsOrDiseases ? "Recommended Action" : "Proactive Tip"}
+                </h4>
+                <p className="text-muted-foreground">{result.treatmentSuggestion}</p>
+            </div>
           </CardContent>
         </Card>
       )}
