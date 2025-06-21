@@ -11,6 +11,8 @@ import {
   Map,
   Sprout,
   User,
+  MessageSquare,
+  Languages,
 } from "lucide-react";
 
 import {
@@ -36,6 +38,8 @@ const navItems = [
   { href: "/pest-detection", label: "Pest & Disease Detection", icon: Bug },
   { href: "/farm-map", label: "Farm Map", icon: Map },
   { href: "/seasonal-planning", label: "Seasonal Planning", icon: CalendarDays },
+  { href: "/local-advisory", label: "Local Advisory", icon: Languages },
+  { href: "/sms-notifications", label: "SMS Alerts", icon: MessageSquare },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
