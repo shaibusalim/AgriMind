@@ -111,7 +111,7 @@ export function CropRecommendationClient() {
                 <h3 className="font-semibold text-lg">Soil Data</h3>
                 <div className="grid md:grid-cols-3 gap-4">
                     <FormField control={form.control} name="nitrogenLevel" render={({ field }) => (<FormItem><FormLabel>Nitrogen (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={form.control} name="phosphorusLevel" render={({ field }) => (<FormItem><FormLabel>Phosphorus (ppm)</F<ctrl61>ormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="phosphorusLevel" render={({ field }) => (<FormItem><FormLabel>Phosphorus (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="potassiumLevel" render={({ field }) => (<FormItem><FormLabel>Potassium (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="pHLevel" render={({ field }) => (<FormItem><FormLabel>pH Level</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="organicMatterContent" render={({ field }) => (<FormItem><FormLabel>Organic Matter (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>)} />
