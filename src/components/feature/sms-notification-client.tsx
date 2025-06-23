@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,9 +23,14 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function SmsNotificationClient() {
+  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -50,7 +55,7 @@ export function SmsNotificationClient() {
       } else {
         throw new Error("Failed to send SMS.");
       }
-    } catch (e: any) {
+    } catch (e: any)      {
       setError(e.message || "An unexpected error occurred.");
        toast({
         variant: "destructive",
@@ -60,6 +65,10 @@ export function SmsNotificationClient() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!isMounted) {
+    return null;
   }
 
   return (
