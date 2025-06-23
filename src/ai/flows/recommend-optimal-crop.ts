@@ -50,32 +50,26 @@ export async function recommendOptimalCrop(input: RecommendOptimalCropInput): Pr
   return recommendOptimalCropFlow(input);
 }
 
-const analyzeOptimalCrop = ai.defineTool(
-    {
-      name: 'analyzeOptimalCrop',
-      description: 'Analyzes soil data and local climate conditions to recommend optimal crop types.',
-      inputSchema: RecommendOptimalCropInputSchema,
-      outputSchema: RecommendOptimalCropOutputSchema
-    },
-    async (input) => {
-      return {
-        recommendations: []
-      };
-    }
-);
-
 const prompt = ai.definePrompt({
   name: 'recommendOptimalCropPrompt',
   input: {schema: RecommendOptimalCropInputSchema},
   output: {schema: RecommendOptimalCropOutputSchema},
-  tools: [analyzeOptimalCrop],
-  prompt: `Based on the following soil data, climate data and location, recommend the most suitable crop types for the farm. Use the analyzeOptimalCrop tool to determine the optimal crop types.
+  prompt: `You are an expert agronomist. Your task is to recommend optimal crops for a farm based on detailed soil and climate data. Analyze the provided information and return a list of 1 to 3 crop recommendations.
 
+The recommendations should be tailored to the specific location provided. Consider factors like local market demand, common pests in the region, and suitability to the climate.
+
+For each recommendation, you must provide:
+- The specific crop type.
+- An estimated yield range (e.g., "3-4 tons/hectare").
+- A brief risk assessment (e.g., "Moderate risk of drought stress, susceptible to rust.").
+- Actionable additional tips for cultivation in these conditions.
+
+Return ONLY the JSON object as specified in the output schema.
+
+Data:
+Location: {{{location}}}
 Soil Data: {{{JSON.stringify(soilData, null, 2)}}}
 Climate Data: {{{JSON.stringify(climateData, null, 2)}}}
-Location: {{{location}}}
-
-Consider high-yield and low-risk options.
 `,
 });
 
@@ -90,4 +84,3 @@ const recommendOptimalCropFlow = ai.defineFlow(
     return output!;
   }
 );
-

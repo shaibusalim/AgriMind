@@ -8,7 +8,7 @@ import { recommendOptimalCrop, type RecommendOptimalCropOutput } from "@/ai/flow
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Sprout, Loader, AlertTriangle, Lightbulb } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
@@ -98,8 +98,11 @@ export function CropRecommendationClient() {
                 <h3 className="font-semibold text-lg">Location</h3>
                 <FormField control={form.control} name="location" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Farm Location</FormLabel>
+                      <FormLabel>Farm Location (e.g. City, State/Country)</FormLabel>
                       <FormControl><Input placeholder="e.g., Central Valley, California" {...field} /></FormControl>
+                      <FormDescription>
+                        Providing a specific location helps the AI give more accurate, region-specific advice.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -108,7 +111,7 @@ export function CropRecommendationClient() {
                 <h3 className="font-semibold text-lg">Soil Data</h3>
                 <div className="grid md:grid-cols-3 gap-4">
                     <FormField control={form.control} name="nitrogenLevel" render={({ field }) => (<FormItem><FormLabel>Nitrogen (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                    <FormField control={form.control} name="phosphorusLevel" render={({ field }) => (<FormItem><FormLabel>Phosphorus (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name="phosphorusLevel" render={({ field }) => (<FormItem><FormLabel>Phosphorus (ppm)</F<ctrl61>ormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="potassiumLevel" render={({ field }) => (<FormItem><FormLabel>Potassium (ppm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="pHLevel" render={({ field }) => (<FormItem><FormLabel>pH Level</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name="organicMatterContent" render={({ field }) => (<FormItem><FormLabel>Organic Matter (%)</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>)} />
