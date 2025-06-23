@@ -50,9 +50,15 @@ export async function recommendOptimalCrop(input: RecommendOptimalCropInput): Pr
   return recommendOptimalCropFlow(input);
 }
 
+const RecommendOptimalCropPromptInputSchema = z.object({
+  location: z.string(),
+  soilDataString: z.string(),
+  climateDataString: z.string(),
+});
+
 const prompt = ai.definePrompt({
   name: 'recommendOptimalCropPrompt',
-  input: {schema: RecommendOptimalCropInputSchema},
+  input: {schema: RecommendOptimalCropPromptInputSchema},
   output: {schema: RecommendOptimalCropOutputSchema},
   prompt: `You are an expert agronomist. Your task is to recommend optimal crops for a farm based on detailed soil and climate data. Analyze the provided information and return a list of 1 to 3 crop recommendations.
 
@@ -68,8 +74,8 @@ Return ONLY the JSON object as specified in the output schema.
 
 Data:
 Location: {{{location}}}
-Soil Data: {{{JSON.stringify(soilData, null, 2)}}}
-Climate Data: {{{JSON.stringify(climateData, null, 2)}}}
+Soil Data: {{{soilDataString}}}
+Climate Data: {{{climateDataString}}}
 `,
 });
 
@@ -79,8 +85,13 @@ const recommendOptimalCropFlow = ai.defineFlow(
     inputSchema: RecommendOptimalCropInputSchema,
     outputSchema: RecommendOptimalCropOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const promptInput = {
+      location: input.location,
+      soilDataString: JSON.stringify(input.soilData, null, 2),
+      climateDataString: JSON.stringify(input.climateData, null, 2),
+    };
+    const {output} = await prompt(promptInput);
     return output!;
   }
 );
