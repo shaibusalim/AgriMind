@@ -7,3 +7,4 @@ import '@/ai/flows/recommend-optimal-crop.ts';
 import '@/ai/flows/weather-forecast-flow.ts';
 import '@/ai/flows/local-advisory-flow.ts';
 import '@/ai/flows/send-sms-flow.ts';
+import '@/ai/flows/text-to-speech-flow.ts';
