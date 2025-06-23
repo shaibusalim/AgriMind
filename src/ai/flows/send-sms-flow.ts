@@ -26,6 +26,7 @@ export async function sendSmsNotification(input: SendSmsNotificationInput): Prom
   return sendSmsFlow(input);
 }
 
+// In a real app, this would use a service like Twilio. For now, it simulates sending an SMS.
 const sendSmsTool = ai.defineTool(
     {
         name: 'sendSmsTool',
@@ -35,7 +36,8 @@ const sendSmsTool = ai.defineTool(
     },
     async (input) => {
         console.log(`Simulating SMS to ${input.phoneNumber}: "${input.message}"`);
-        // In a real application, you would integrate with an SMS gateway like Twilio here.
+        // Here you would integrate with an SMS gateway.
+        // The simulation will always succeed.
         return {
             status: 'Sent',
             messageId: `sms_${Date.now()}_${Math.random().toString(36).substring(2)}`,
@@ -43,18 +45,7 @@ const sendSmsTool = ai.defineTool(
     }
 );
 
-const prompt = ai.definePrompt({
-  name: 'sendSmsPrompt',
-  input: {schema: SendSmsNotificationInputSchema},
-  output: {schema: SendSmsNotificationOutputSchema},
-  tools: [sendSmsTool],
-  prompt: `Use the sendSmsTool to send the provided message to the given phone number.
-
-Phone Number: {{{phoneNumber}}}
-Message: {{{message}}}
-`,
-});
-
+// This flow directly calls the tool, as no complex LLM reasoning is needed for this direct action.
 const sendSmsFlow = ai.defineFlow(
   {
     name: 'sendSmsFlow',
@@ -62,7 +53,8 @@ const sendSmsFlow = ai.defineFlow(
     outputSchema: SendSmsNotificationOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    // We call the tool directly instead of asking an LLM to do it.
+    const result = await sendSmsTool(input);
+    return result;
   }
 );
