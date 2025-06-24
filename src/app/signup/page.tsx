@@ -16,12 +16,33 @@ export default function SignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast({
+        variant: 'destructive',
+        title: 'Passwords do not match',
+        description: 'Please ensure both passwords are the same.',
+      });
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      toast({
+        variant: 'destructive',
+        title: 'Weak Password',
+        description: 'Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a number.',
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -30,9 +51,9 @@ export default function SignupPage() {
       }
       toast({
         title: 'Account Created',
-        description: 'You have been successfully signed up!',
+        description: 'You have been successfully signed up! Please log in.',
       });
-      router.push('/dashboard');
+      router.push('/login');
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -88,6 +109,17 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Retype Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
