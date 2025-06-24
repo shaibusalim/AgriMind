@@ -124,12 +124,12 @@ export function PestDetectionClient() {
             <CardTitle>Analysis Result</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert variant={result.hasPestsOrDiseases ? "destructive" : "default"} className={!result.hasPestsOrDiseases ? "border-green-500 bg-green-500/10" : ""}>
-                {result.hasPestsOrDiseases ? <Bug /> : <CheckCircle className="text-green-600"/>}
-                <AlertTitle className={!result.hasPestsOrDiseases ? "text-green-700" : ""}>
+            <Alert variant={result.hasPestsOrDiseases ? "destructive" : "default"} className={!result.hasPestsOrDiseases ? "border-accent/50 bg-accent/10 text-accent" : ""}>
+                {result.hasPestsOrDiseases ? <Bug /> : <CheckCircle className="text-accent"/>}
+                <AlertTitle>
                     {result.hasPestsOrDiseases ? "Potential Issue Detected" : "Looks Healthy"}
                 </AlertTitle>
-                <AlertDescription className={!result.hasPestsOrDiseases ? "text-green-600" : ""}>
+                <AlertDescription>
                    The AI has identified the following: <strong>{result.identification}</strong>.
                 </AlertDescription>
             </Alert>

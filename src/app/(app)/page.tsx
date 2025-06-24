@@ -42,17 +42,17 @@ const quickLinks = [
 ];
 
 const WeatherIcon = ({ condition }: { condition?: string }) => {
-    if (!condition) return <Sun className="w-8 h-8 text-accent" />;
+    if (!condition) return <Sun className="w-8 h-8 text-primary" />;
     const lowerCaseCondition = condition.toLowerCase();
 
-    if (lowerCaseCondition.includes("sun") || lowerCaseCondition.includes("clear")) return <Sun className="w-8 h-8 text-yellow-500" />;
-    if (lowerCaseCondition.includes("cloud")) return <Cloudy className="w-8 h-8 text-gray-500" />;
+    if (lowerCaseCondition.includes("sun") || lowerCaseCondition.includes("clear")) return <Sun className="w-8 h-8 text-primary" />;
+    if (lowerCaseCondition.includes("cloud")) return <Cloudy className="w-8 h-8 text-muted-foreground" />;
     if (lowerCaseCondition.includes("rain")) return <CloudRain className="w-8 h-8 text-blue-500" />;
-    if (lowerCaseCondition.includes("storm")) return <Zap className="w-8 h-8 text-yellow-600" />;
+    if (lowerCaseCondition.includes("storm")) return <Zap className="w-8 h-8 text-destructive" />;
     if (lowerCaseCondition.includes("snow")) return <Snowflake className="w-8 h-8 text-blue-300" />;
-    if (lowerCaseCondition.includes("fog")) return <CloudFog className="w-8 h-8 text-gray-400" />;
-    if (lowerCaseCondition.includes("wind")) return <Wind className="w-8 h-8 text-gray-500" />;
-    return <Sun className="w-8 h-8 text-accent" />;
+    if (lowerCaseCondition.includes("fog")) return <CloudFog className="w-8 h-8 text-muted-foreground" />;
+    if (lowerCaseCondition.includes("wind")) return <Wind className="w-8 h-8 text-muted-foreground" />;
+    return <Sun className="w-8 h-8 text-primary" />;
 }
 
 export default function DashboardPage() {
