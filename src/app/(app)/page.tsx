@@ -103,9 +103,13 @@ export default function DashboardPage() {
                         if (geoData.results && geoData.results.length > 0) {
                             const addressComponents = geoData.results[0].address_components;
                             const city = addressComponents.find(c => c.types.includes("locality"))?.long_name;
-                            const state = addressComponents.find(c => c.types.includes("administrative_area_level_1"))?.short_name;
-                            const bestLocationName = (city && state) ? `${city}, ${state}` : geoData.results[0].formatted_address;
-                            fetchWeatherData(bestLocationName, bestLocationName);
+                            const country = addressComponents.find(c => c.types.includes("country"))?.long_name;
+                            
+                            // Construct the location name, e.g., "Tamale, Ghana"
+                            const displayLocation = (city && country) ? `${city}, ${country}` : geoData.results[0].formatted_address;
+                            
+                            // Pass the location to the weather AI
+                            fetchWeatherData(displayLocation, displayLocation);
                         } else {
                            throw new Error("No location found for coordinates.");
                         }
