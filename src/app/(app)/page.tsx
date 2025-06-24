@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -111,11 +112,13 @@ export default function DashboardPage() {
                             // Pass the location to the weather AI
                             fetchWeatherData(displayLocation, displayLocation);
                         } else {
-                           throw new Error("No location found for coordinates.");
+                           console.warn("No location found for coordinates. Using coordinates directly for weather forecast.");
+                           setWeatherError("Could not determine your city name.");
+                           fetchWeatherData(`lat ${latitude}, long ${longitude}`, "Your Location");
                         }
                     } catch (e) {
-                        console.error("Reverse geocoding failed:", e);
-                        setWeatherError("Could not determine city name. Using coordinates.");
+                        console.error("Reverse geocoding API call failed:", e);
+                        setWeatherError("Could not reach location service. Using coordinates.");
                         fetchWeatherData(`lat ${latitude}, long ${longitude}`, "Your Location");
                     }
                 },
