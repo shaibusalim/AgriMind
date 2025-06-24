@@ -11,7 +11,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GetWeatherForecastInputSchema = z.object({
-  location: z.string().describe('The location for the weather forecast (e.g., "Napa Valley, CA").'),
+  location: z.string().describe('The location for the weather forecast (e.g., "Napa Valley, CA", "lat 34.05, long -118.24").'),
 });
 export type GetWeatherForecastInput = z.infer<typeof GetWeatherForecastInputSchema>;
 
@@ -33,35 +33,13 @@ export async function getWeatherForecast(input: GetWeatherForecastInput): Promis
   return weatherForecastFlow(input);
 }
 
-// In a real-world scenario, this tool would call a weather API.
-// For this demo, we'll let the LLM generate a realistic forecast based on its knowledge.
-const getWeatherTool = ai.defineTool(
-    {
-      name: 'getWeatherTool',
-      description: 'Gets the current weather forecast for a specified location.',
-      inputSchema: GetWeatherForecastInputSchema,
-      outputSchema: GetWeatherForecastOutputSchema
-    },
-    async ({location}) => {
-      // This is a mock. The LLM will generate data in the prompt.
-      // We are defining the tool so the LLM knows what to output.
-      return {
-        temperature: 25,
-        feelsLike: 27,
-        condition: "Sunny",
-        precipitationChance: 5,
-        humidity: 60,
-        windSpeed: 10
-      };
-    }
-);
-
 const prompt = ai.definePrompt({
   name: 'weatherForecastPrompt',
   input: {schema: GetWeatherForecastInputSchema},
   output: {schema: GetWeatherForecastOutputSchema},
-  tools: [getWeatherTool],
-  prompt: `You are a helpful weather assistant. Your task is to provide a weather forecast for the given location using your knowledge. Do not make up weather, provide a realistic forecast based on the location. Use the getWeatherTool to format your response.
+  prompt: `You are a helpful weather assistant. Your task is to provide a realistic weather forecast based on your knowledge of the given location.
+  
+Do not make up weather. Provide a reasonable forecast based on the location's climate. Your response must be in the form of a JSON object that matches the specified output schema.
 
 Location: {{{location}}}`,
 });
@@ -74,6 +52,9 @@ const weatherForecastFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error("The AI failed to generate a valid weather forecast. The output was empty.");
+    }
+    return output;
   }
 );
