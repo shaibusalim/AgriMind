@@ -59,22 +59,71 @@ export default function DashboardPage() {
     const [weather, setWeather] = useState<GetWeatherForecastOutput | null>(null);
     const [weatherLoading, setWeatherLoading] = useState(true);
     const [weatherError, setWeatherError] = useState<string | null>(null);
+    const [locationName, setLocationName] = useState("your location...");
 
     useEffect(() => {
-        async function fetchWeather() {
+        const fetchWeatherData = async (location: string, displayLocation?: string) => {
             try {
-                setWeatherLoading(true);
-                setWeatherError(null);
-                const forecast = await getWeatherForecast({ location: "Central Valley, California" });
+                // Don't set loading to true if we are just falling back
+                if(!weather) setWeatherLoading(true);
+
+                const forecast = await getWeatherForecast({ location });
                 setWeather(forecast);
+                setLocationName(displayLocation || location.split(',').slice(0, 2).join(', '));
             } catch (error) {
                 setWeatherError("Could not fetch weather data.");
                 console.error(error);
             } finally {
                 setWeatherLoading(false);
             }
-        }
-        fetchWeather();
+        };
+
+        const getAndFetchWeather = () => {
+            if (!navigator.geolocation) {
+                setWeatherError("Geolocation is not supported. Showing default.");
+                fetchWeatherData("Central Valley, California", "Central Valley, CA");
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+                    if (!apiKey) {
+                        console.warn("Google Maps API key is missing. Using coordinates for forecast.");
+                        // The AI can often infer location from lat/long string
+                        fetchWeatherData(`lat ${latitude}, long ${longitude}`, "Your Location");
+                        return;
+                    }
+                    
+                    try {
+                        const geoResponse = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`);
+                        const geoData = await geoResponse.json();
+                        if (geoData.results && geoData.results.length > 0) {
+                            const addressComponents = geoData.results[0].address_components;
+                            const city = addressComponents.find(c => c.types.includes("locality"))?.long_name;
+                            const state = addressComponents.find(c => c.types.includes("administrative_area_level_1"))?.short_name;
+                            const bestLocationName = (city && state) ? `${city}, ${state}` : geoData.results[0].formatted_address;
+                            fetchWeatherData(bestLocationName, bestLocationName);
+                        } else {
+                           throw new Error("No location found for coordinates.");
+                        }
+                    } catch (e) {
+                        console.error("Reverse geocoding failed:", e);
+                        setWeatherError("Could not determine city name. Using coordinates.");
+                        fetchWeatherData(`lat ${latitude}, long ${longitude}`, "Your Location");
+                    }
+                },
+                (error) => {
+                    console.error("Geolocation error:", error.message);
+                    setWeatherError("Could not get location. Showing default forecast.");
+                    fetchWeatherData("Central Valley, California", "Central Valley, CA");
+                }
+            );
+        };
+
+        getAndFetchWeather();
     }, []);
 
   return (
@@ -118,7 +167,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Weather Forecast</CardTitle>
-            <CardDescription>Next 24 hours in Central Valley</CardDescription>
+            <CardDescription>Next 24 hours in {locationName}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {weatherLoading ? (
@@ -140,12 +189,13 @@ export default function DashboardPage() {
                         <Skeleton className="h-5 w-full" />
                     </div>
                 </div>
-            ) : weatherError ? (
+            ) : weatherError && !weather ? (
                 <Alert variant="destructive">
                   <AlertDescription>{weatherError}</AlertDescription>
                 </Alert>
-            ) : weather && (
+            ) : weather ? (
                 <>
+                    {weatherError && <Alert variant="destructive" className="mb-4"><AlertDescription>{weatherError}</AlertDescription></Alert>}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <WeatherIcon condition={weather.condition} />
@@ -175,7 +225,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                 </>
-            )}
+            ) : null}
           </CardContent>
         </Card>
       </div>
