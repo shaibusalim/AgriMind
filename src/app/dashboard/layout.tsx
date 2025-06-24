@@ -39,14 +39,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/crop-recommendation", label: "Crop Recommendation", icon: Sprout },
-  { href: "/yield-prediction", label: "Yield Prediction", icon: AreaChart },
-  { href: "/pest-detection", label: "Pest & Disease Detection", icon: Bug },
-  { href: "/farm-map", label: "Farm Map", icon: Map },
-  { href: "/seasonal-planning", label: "Seasonal Planning", icon: CalendarDays },
-  { href: "/local-advisory", label: "Local Advisory", icon: Languages },
-  { href: "/sms-notifications", label: "SMS Alerts", icon: MessageSquare },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/crop-recommendation", label: "Crop Recommendation", icon: Sprout },
+  { href: "/dashboard/yield-prediction", label: "Yield Prediction", icon: AreaChart },
+  { href: "/dashboard/pest-detection", label: "Pest & Disease Detection", icon: Bug },
+  { href: "/dashboard/farm-map", label: "Farm Map", icon: Map },
+  { href: "/dashboard/seasonal-planning", label: "Seasonal Planning", icon: CalendarDays },
+  { href: "/dashboard/local-advisory", label: "Local Advisory", icon: Languages },
+  { href: "/dashboard/sms-notifications", label: "SMS Alerts", icon: MessageSquare },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -121,7 +121,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-           <Link href="/profile" className="flex items-center gap-3 w-full">
+           <Link href="/dashboard/profile" className="flex items-center gap-3 w-full">
               <Avatar className="h-9 w-9">
                 {user.photoURL ? <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} data-ai-hint="farmer avatar" /> : null }
                 <AvatarFallback>{getInitials(user.displayName)}</AvatarFallback>
@@ -158,7 +158,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                       <Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
+                       <Link href="/dashboard/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut}>
