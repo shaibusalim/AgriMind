@@ -15,6 +15,7 @@ import {
   Languages,
   LogOut,
   LoaderCircle,
+  Bot,
 } from "lucide-react";
 
 import {
@@ -40,6 +41,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/chatbot", label: "AI Chatbot", icon: Bot },
   { href: "/dashboard/crop-recommendation", label: "Crop Recommendation", icon: Sprout },
   { href: "/dashboard/yield-prediction", label: "Yield Prediction", icon: AreaChart },
   { href: "/dashboard/pest-detection", label: "Pest & Disease Detection", icon: Bug },

@@ -8,3 +8,4 @@ import '@/ai/flows/weather-forecast-flow.ts';
 import '@/ai/flows/local-advisory-flow.ts';
 import '@/ai/flows/send-sms-flow.ts';
 import '@/ai/flows/text-to-speech-flow.ts';
+import '@/ai/flows/chatbot-flow.ts';
